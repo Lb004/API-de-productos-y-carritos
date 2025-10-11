@@ -1,0 +1,98 @@
+### 1. Ver todos los productos (primero verificamos qué hay)
+GET http://localhost:8080/api/products
+
+###
+
+### 2. Crear Producto - Mouse
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "title": "Mouse Logitech",
+  "description": "Mouse inalámbrico ergonómico",
+  "code": "MOU002",
+  "price": 50,
+  "stock": 100,
+  "category": "Accesorios"
+}
+
+###
+
+### 3. Crear Producto - Teclado
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "title": "Teclado Mecánico",
+  "description": "Teclado mecánico RGB",
+  "code": "TEC001",
+  "price": 120,
+  "stock": 50,
+  "category": "Accesorios"
+}
+
+###
+
+### 4. Crear Producto - Monitor
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "title": "Monitor Samsung 27",
+  "description": "Monitor 4K",
+  "code": "MON001",
+  "price": 400,
+  "stock": 20,
+  "category": "Pantallas"
+}
+
+###
+
+### 5. Ver todos los productos nuevamente
+GET http://localhost:8080/api/products
+
+###
+
+### 6. Ver un producto específico (el producto con id 1)
+GET http://localhost:8080/api/products/1
+
+###
+
+### 7. Actualizar el precio de un producto
+PUT http://localhost:8080/api/products/2
+Content-Type: application/json
+
+{
+  "price": 45,
+  "stock": 150
+}
+
+###
+
+### 8. Crear un carrito
+POST http://localhost:8080/api/carts
+
+###
+
+### 9. Agregar producto 1 al carrito 1
+POST http://localhost:8080/api/carts/1/product/1
+
+###
+
+### 10. Agregar producto 1 otra vez (incrementa quantity)
+POST http://localhost:8080/api/carts/1/product/1
+
+###
+
+### 11. Agregar producto 2 al carrito 1
+POST http://localhost:8080/api/carts/1/product/2
+
+###
+
+### 12. Ver el contenido del carrito
+GET http://localhost:8080/api/carts/1
+
+###
+
+### 13. Eliminar un producto
+DELETE http://localhost:8080/api/products/4
