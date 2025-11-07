@@ -1,98 +1,254 @@
-### 1. Ver todos los productos (primero verificamos qué hay)
-GET http://localhost:8080/api/products
+### Variables
+@host = http://localhost:8080
+@productId = 1
+@cartId = 1
 
-###
+################################
+# PRODUCTOS
+################################
 
-### 2. Crear Producto - Mouse
-POST http://localhost:8080/api/products
+### Obtener todos los productos
+GET {{host}}/api/products
+
+### Obtener producto por ID
+GET {{host}}/api/products/{{productId}}
+
+### Crear nuevo producto
+POST {{host}}/api/products
 Content-Type: application/json
 
 {
-  "title": "Mouse Logitech",
-  "description": "Mouse inalámbrico ergonómico",
-  "code": "MOU002",
-  "price": 50,
-  "stock": 100,
-  "category": "Accesorios"
-}
-
-###
-
-### 3. Crear Producto - Teclado
-POST http://localhost:8080/api/products
-Content-Type: application/json
-
-{
-  "title": "Teclado Mecánico",
-  "description": "Teclado mecánico RGB",
-  "code": "TEC001",
-  "price": 120,
-  "stock": 50,
-  "category": "Accesorios"
-}
-
-###
-
-### 4. Crear Producto - Monitor
-POST http://localhost:8080/api/products
-Content-Type: application/json
-
-{
-  "title": "Monitor Samsung 27",
-  "description": "Monitor 4K",
+  "title": "Monitor LG 27 pulgadas",
+  "description": "Monitor gaming 144Hz",
   "code": "MON001",
-  "price": 400,
-  "stock": 20,
-  "category": "Pantallas"
+  "price": 350,
+  "stock": 15,
+  "category": "Tecnología"
 }
 
-###
-
-### 5. Ver todos los productos nuevamente
-GET http://localhost:8080/api/products
-
-###
-
-### 6. Ver un producto específico (el producto con id 1)
-GET http://localhost:8080/api/products/1
-
-###
-
-### 7. Actualizar el precio de un producto
-PUT http://localhost:8080/api/products/2
+### Crear producto con todos los campos
+POST {{host}}/api/products
 Content-Type: application/json
 
 {
-  "price": 45,
-  "stock": 150
+  "title": "Auriculares Bluetooth",
+  "description": "Auriculares inalámbricos con cancelación de ruido",
+  "code": "AUR001",
+  "price": 89.99,
+  "stock": 40,
+  "category": "Audio",
+  "status": true,
+  "thumbnails": ["image1.jpg", "image2.jpg"]
 }
 
-###
+### Actualizar producto
+PUT {{host}}/api/products/{{productId}}
+Content-Type: application/json
 
-### 8. Crear un carrito
-POST http://localhost:8080/api/carts
+{
+  "price": 1400,
+  "stock": 8
+}
 
-###
+### Eliminar producto
+DELETE {{host}}/api/products/{{productId}}
 
-### 9. Agregar producto 1 al carrito 1
-POST http://localhost:8080/api/carts/1/product/1
+################################
+# PRUEBAS DE VALIDACIÓN - PRODUCTOS
+################################
 
-###
+### Error: Producto sin título (campo obligatorio)
+POST {{host}}/api/products
+Content-Type: application/json
 
-### 10. Agregar producto 1 otra vez (incrementa quantity)
-POST http://localhost:8080/api/carts/1/product/1
+{
+  "description": "Descripción",
+  "code": "TEST001",
+  "price": 100,
+  "stock": 50,
+  "category": "Test"
+}
 
-###
+### Error: Precio negativo
+POST {{host}}/api/products
+Content-Type: application/json
 
-### 11. Agregar producto 2 al carrito 1
-POST http://localhost:8080/api/carts/1/product/2
+{
+  "title": "Producto Test",
+  "description": "Descripción",
+  "code": "TEST002",
+  "price": -50,
+  "stock": 10,
+  "category": "Test"
+}
 
-###
+### Error: Stock no entero
+POST {{host}}/api/products
+Content-Type: application/json
 
-### 12. Ver el contenido del carrito
-GET http://localhost:8080/api/carts/1
+{
+  "title": "Producto Test",
+  "description": "Descripción",
+  "code": "TEST003",
+  "price": 100,
+  "stock": 10.5,
+  "category": "Test"
+}
 
-###
+### Error: Código duplicado
+POST {{host}}/api/products
+Content-Type: application/json
 
-### 13. Eliminar un producto
-DELETE http://localhost:8080/api/products/4
+{
+  "title": "Producto Duplicado",
+  "description": "Descripción",
+  "code": "LAP001",
+  "price": 100,
+  "stock": 50,
+  "category": "Test"
+}
+
+### Error: Price no es número
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "title": "Producto Test",
+  "description": "Descripción",
+  "code": "TEST004",
+  "price": "cien",
+  "stock": 10,
+  "category": "Test"
+}
+
+### Error: Status no es booleano
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "title": "Producto Test",
+  "description": "Descripción",
+  "code": "TEST005",
+  "price": 100,
+  "stock": 10,
+  "category": "Test",
+  "status": "true"
+}
+
+### Error: Thumbnails no es array
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "title": "Producto Test",
+  "description": "Descripción",
+  "code": "TEST006",
+  "price": 100,
+  "stock": 10,
+  "category": "Test",
+  "thumbnails": "imagen.jpg"
+}
+
+################################
+# CARRITOS
+################################
+
+### Crear nuevo carrito
+POST {{host}}/api/carts
+
+### Obtener carrito por ID
+GET {{host}}/api/carts/{{cartId}}
+
+### Agregar producto al carrito
+POST {{host}}/api/carts/{{cartId}}/product/{{productId}}
+
+### Agregar otro producto al carrito
+POST {{host}}/api/carts/{{cartId}}/product/2
+
+### Agregar mismo producto (debe incrementar quantity)
+POST {{host}}/api/carts/{{cartId}}/product/{{productId}}
+
+################################
+# PRUEBAS DE VALIDACIÓN - CARRITOS
+################################
+
+### Error: Carrito no existe
+GET {{host}}/api/carts/999
+
+### Error: Agregar producto a carrito inexistente
+POST {{host}}/api/carts/999/product/1
+
+### Error: ID de carrito inválido
+GET {{host}}/api/carts/abc
+
+### Error: ID de producto inválido
+POST {{host}}/api/carts/1/product/xyz
+
+################################
+# VISTAS WEB
+################################
+
+### Vista Home (lista estática)
+GET {{host}}/
+
+### Vista Real Time Products (con WebSockets)
+GET {{host}}/realtimeproducts
+
+################################
+# PRUEBAS DE ACTUALIZACIÓN
+################################
+
+### Actualizar solo un campo
+PUT {{host}}/api/products/2
+Content-Type: application/json
+
+{
+  "price": 55
+}
+
+### Intentar actualizar ID (debe ser ignorado)
+PUT {{host}}/api/products/2
+Content-Type: application/json
+
+{
+  "id": 999,
+  "title": "Mouse Actualizado"
+}
+
+################################
+# CASOS EDGE
+################################
+
+### Producto con strings vacíos (debe fallar)
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "title": "   ",
+  "description": "",
+  "code": "TEST007",
+  "price": 100,
+  "stock": 10,
+  "category": "Test"
+}
+
+### Producto con campos extra (deben ser ignorados)
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "title": "Producto Extra",
+  "description": "Con campos adicionales",
+  "code": "EXTRA001",
+  "price": 100,
+  "stock": 10,
+  "category": "Test",
+  "campoExtra": "Este campo será ignorado",
+  "otroCampo": 123
+}
+
+### Obtener producto inexistente
+GET {{host}}/api/products/9999
+
+### Eliminar producto inexistente
+DELETE {{host}}/api/products/9999

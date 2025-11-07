@@ -1,7 +1,7 @@
 {
   "name": "ecommerce-api",
   "version": "1.0.0",
-  "description": "API de productos y carritos de compra",
+  "description": "API de productos y carritos de compra con websockets",
   "main": "src/app.js",
   "type": "module",
   "scripts": {
@@ -12,11 +12,15 @@
     "api",
     "ecommerce",
     "express",
-    "nodejs"
+    "nodejs",
+    "websockets",
+    "handlebars"
   ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.3",
+    "socket.io": "^4.7.2"
   }
 }

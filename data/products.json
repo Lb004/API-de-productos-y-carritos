@@ -11,25 +11,14 @@
     "thumbnails": []
   },
   {
-    "id": 2,
-    "title": "Mouse Logitech",
-    "description": "Mouse inalámbrico ergonómico",
-    "code": "MOU002",
-    "price": 45,
+    "id": 4,
+    "title": "lucas",
+    "description": "lucas",
+    "code": "55",
+    "price": 21,
     "status": true,
-    "stock": 150,
-    "category": "Accesorios",
-    "thumbnails": []
-  },
-  {
-    "id": 3,
-    "title": "Teclado Mecánico",
-    "description": "Teclado mecánico RGB",
-    "code": "TEC001",
-    "price": 120,
-    "status": true,
-    "stock": 50,
-    "category": "Accesorios",
+    "stock": 22,
+    "category": "perfume",
     "thumbnails": []
   }
 ]

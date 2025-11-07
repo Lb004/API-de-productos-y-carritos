@@ -1,0 +1,22 @@
+<div class="products-grid">
+  {{#if products.length}}
+    {{#each products}}
+      <div class="product-card">
+        <h3>{{this.title}}</h3>
+        <p>{{this.description}}</p>
+        <p class="product-price">${{this.price}}</p>
+        <p class="product-code">Código: {{this.code}}</p>
+        <p class="product-stock">
+          {{#if this.stock}}
+            Stock:
+            {{this.stock}}
+          {{else}}
+            <span class="out">Sin stock</span>
+          {{/if}}
+        </p>
+      </div>
+    {{/each}}
+  {{else}}
+    <p class="no-products">No hay productos disponibles.</p>
+  {{/if}}
+</div>
