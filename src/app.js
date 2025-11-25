@@ -4,26 +4,37 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+<<<<<<< HEAD
 import dotenv from "dotenv";
 
 // Importar configuración de la base de datos
 import connectDB from "./config/database.js";
 
 // Importar rutas
+=======
+
+>>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 import productsRouter from "./routes/products.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 import viewsRouter from "./routes/views.routes.js";
 
+<<<<<<< HEAD
 // Configuración inicial
 dotenv.config();
+=======
+>>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+<<<<<<< HEAD
 const PORT = process.env.PORT || 8080;
 
 // 🔗 CONECTAR A LA BASE DE DATOS
 connectDB();
+=======
+const PORT = 8080;
+>>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 
 // Crear servidor HTTP
 const httpServer = createServer(app);
@@ -31,6 +42,7 @@ const httpServer = createServer(app);
 // Configurar Socket.io
 const io = new Server(httpServer);
 
+<<<<<<< HEAD
 // Configurar Handlebars CON HELPERS Y SEGURIDAD CORREGIDA
 // Configurar Handlebars CON HELPERS Y SEGURIDAD CORREGIDA
 app.engine("handlebars", engine({
@@ -77,6 +89,16 @@ app.engine("handlebars", engine({
     eq: (a, b) => a === b
   }
 }));
+=======
+// Configurar Handlebars
+app.engine(
+  "handlebars",
+  engine({
+    defaultLayout: "main",
+    layoutsDir: path.join(__dirname, "views/layouts"),
+  })
+);
+>>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "views"));
 
@@ -96,17 +118,31 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
 
+<<<<<<< HEAD
 // WebSocket connection ACTUALIZADO PARA MONGODB
+=======
+// WebSocket connection
+>>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 io.on("connection", (socket) => {
   console.log("Nuevo cliente conectado");
 
   // Crear producto desde WebSocket
   socket.on("createProduct", async (productData) => {
     try {
+<<<<<<< HEAD
       const ProductManager = (await import("./dao/ProductManager.js")).default;
       const productManager = new ProductManager();
 
       const newProduct = await productManager.addProduct(productData);
+=======
+      const ProductManager = (await import("./managers/ProductManager.js"))
+        .default;
+      const productManager = new ProductManager(
+        path.join(__dirname, "../data/products.json")
+      );
+
+      const newProduct = productManager.addProduct(productData);
+>>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 
       // Emitir a todos los clientes
       io.emit("productCreated", newProduct);
@@ -118,10 +154,20 @@ io.on("connection", (socket) => {
   // Eliminar producto desde WebSocket
   socket.on("deleteProduct", async (productId) => {
     try {
+<<<<<<< HEAD
       const ProductManager = (await import("./dao/ProductManager.js")).default;
       const productManager = new ProductManager();
 
       await productManager.deleteProduct(productId);
+=======
+      const ProductManager = (await import("./managers/ProductManager.js"))
+        .default;
+      const productManager = new ProductManager(
+        path.join(__dirname, "../data/products.json")
+      );
+
+      productManager.deleteProduct(productId);
+>>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 
       // Emitir a todos los clientes
       io.emit("productDeleted", productId);
@@ -137,7 +183,14 @@ io.on("connection", (socket) => {
 
 // Iniciar servidor
 httpServer.listen(PORT, () => {
+<<<<<<< HEAD
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
 
 export { io };
+=======
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
+
+export { io };
+>>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
