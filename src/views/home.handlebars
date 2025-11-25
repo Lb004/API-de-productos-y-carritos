@@ -1,0 +1,361 @@
+<div class="products-container">
+  <h1>{{title}}</h1>
+
+  <!-- Filtros y Búsqueda -->
+  <div class="filters">
+    <form method="GET" action="/" class="filter-form">
+      <input type="text" name="query" placeholder="Buscar productos..." value="{{query}}">
+      <input type="text" name="category" placeholder="Categoría..." value="{{category}}">
+      <select name="sort">
+        <option value="">Ordenar por...</option>
+        <option value="asc" {{#eq sort "asc"}}selected{{/eq}}>Precio: Menor a Mayor</option>
+        <option value="desc" {{#eq sort "desc"}}selected{{/eq}}>Precio: Mayor a Menor</option>
+      </select>
+      <select name="limit">
+        <option value="10" {{#eq limit 10}}selected{{/eq}}>10 por página</option>
+        <option value="20" {{#eq limit 20}}selected{{/eq}}>20 por página</option>
+        <option value="50" {{#eq limit 50}}selected{{/eq}}>50 por página</option>
+      </select>
+      <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+      <a href="/" class="btn btn-secondary">Limpiar</a>
+    </form>
+  </div>
+
+  <div class="products-grid">
+    {{#if payload.length}}
+      {{#each payload}}
+        <div class="product-card">
+          <h3>{{this.title}}</h3>
+          <p class="product-description">{{this.description}}</p>
+          <p class="product-price">${{this.price}}</p>
+          <p class="product-code">Código: {{this.code}}</p>
+          <p class="product-category">Categoría: {{this.category}}</p>
+          <p class="product-stock {{#if this.stock}}in-stock{{else}}out-of-stock{{/if}}">
+            {{#if this.stock}}
+              Stock: {{this.stock}}
+            {{else}}
+              <span class="out">Sin stock</span>
+            {{/if}}
+          </p>
+          <div class="product-actions">
+            <a href="/products/{{this._id}}" class="btn btn-primary">Ver Detalles</a>
+            <button class="btn btn-secondary add-to-cart-btn" 
+                    data-product-id="{{this._id}}"
+                    {{#unless this.stock}}disabled{{/unless}}>
+              🛒 Agregar
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="no-products">
+        <h3>No hay productos disponibles</h3>
+        <p>💡 Intenta con otros filtros de búsqueda</p>
+        {{#if error}}
+          <p class="error">Error: {{error}}</p>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+
+  <!-- Paginación -->
+  {{#if payload.length}}
+    <div class="pagination">
+      {{#if hasPrevPage}}
+        <a href="{{prevLink}}" class="btn btn-secondary">← Anterior</a>
+      {{/if}}
+      
+      <span class="page-info">Página {{page}} de {{totalPages}}</span>
+      
+      {{#if hasNextPage}}
+        <a href="{{nextLink}}" class="btn btn-secondary">Siguiente →</a>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
+
+<style>
+.products-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.filters {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.filter-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-form input, .filter-form select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background: white;
+}
+
+.filter-form input:focus, .filter-form select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-color: #667eea;
+}
+
+.product-card h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.product-description {
+  color: #666;
+  margin: 8px 0;
+  line-height: 1.5;
+  min-height: 40px;
+}
+
+.product-price {
+  font-size: 1.5rem;
+  color: #667eea;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.product-code, .product-category {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 5px 0;
+}
+
+.in-stock {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.out-of-stock {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.page-info {
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.no-products {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  grid-column: 1 / -1;
+}
+
+.no-products h3 {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.error {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #764ba2;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn:disabled {
+  background: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Estilos específicos para los filtros */
+.filter-form .btn {
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filter-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-form input, .filter-form select {
+    width: 100%;
+  }
+  
+  .product-actions {
+    flex-direction: column;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-container {
+    padding: 10px;
+  }
+  
+  .filters {
+    padding: 15px;
+  }
+  
+  .product-card {
+    padding: 15px;
+  }
+}
+</style>
+
+<script>
+// Agregar producto al carrito desde la página principal
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+  button.addEventListener('click', async function() {
+    const productId = this.dataset.productId;
+    const button = this;
+    
+    // Mostrar loading
+    const originalText = button.innerHTML;
+    button.innerHTML = '⏳ Agregando...';
+    button.disabled = true;
+    
+    try {
+      // Primero necesitamos un carrito - crear uno nuevo si no existe
+      let cartId = localStorage.getItem('currentCartId');
+      
+      if (!cartId) {
+        // Crear nuevo carrito
+        const response = await fetch('/api/carts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const result = await response.json();
+        cartId = result.payload._id;
+        localStorage.setItem('currentCartId', cartId);
+      }
+      
+      // Agregar producto al carrito
+      const addResponse = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (addResponse.ok) {
+        button.innerHTML = '✅ Agregado!';
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        }, 1500);
+      } else {
+        const error = await addResponse.json();
+        alert('❌ Error: ' + error.message);
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }
+    } catch (error) {
+      alert('❌ Error de conexión: ' + error.message);
+      button.innerHTML = originalText;
+      button.disabled = false;
+    }
+  });
+});
+
+// Mejorar la experiencia de usuario en los filtros
+document.querySelectorAll('.filter-form input, .filter-form select').forEach(element => {
+  element.addEventListener('change', function() {
+    this.closest('form').submit();
+  });
+});
+</script>

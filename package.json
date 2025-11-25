@@ -1,0 +1,24 @@
+{
+  "name": "ecommerce-api",
+  "version": "1.0.0",
+  "description": "API de productos y carritos con MongoDB",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "test-db": "node src/utils/testConnection.js",
+    "migrate": "node src/utils/migrateData.js",
+    "check-data": "node src/utils/checkData.js",
+    "test-carts": "node src/utils/testCarts.js",
+    "activate-products": "node src/utils/activateProducts.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.3",
+    "socket.io": "^4.7.2",
+    "mongoose": "^7.5.0",
+    "mongoose-paginate-v2": "^1.7.4",
+    "dotenv": "^16.3.1"
+  }
+}

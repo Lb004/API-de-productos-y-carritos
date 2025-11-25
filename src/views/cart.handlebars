@@ -1,0 +1,447 @@
+<div class="cart-container">
+  <h1>🛒 Carrito de Compras</h1>
+  
+  {{#if cart.products.length}}
+    <div class="cart-items">
+      {{#each cart.products}}
+        <div class="cart-item" data-product-id="{{this.product._id}}">
+          <div class="item-image">
+            {{#if this.product.thumbnails.length}}
+              <img src="{{this.product.thumbnails.[0]}}" alt="{{this.product.title}}">
+            {{else}}
+              <div class="no-image">📷</div>
+            {{/if}}
+          </div>
+          
+          <div class="item-details">
+            <h3>{{this.product.title}}</h3>
+            <p class="item-description">{{this.product.description}}</p>
+            <p class="item-category">Categoría: {{this.product.category}}</p>
+            <p class="item-code">Código: {{this.product.code}}</p>
+          </div>
+          
+          <div class="item-pricing">
+            <p class="item-price">${{this.product.price}}</p>
+            <div class="quantity-controls">
+              <label for="quantity-{{this.product._id}}">Cantidad:</label>
+              <input type="number" 
+                     id="quantity-{{this.product._id}}" 
+                     class="quantity-input"
+                     value="{{this.quantity}}" 
+                     min="1" 
+                     max="{{this.product.stock}}"
+                     data-cart-id="{{../cart._id}}"
+                     data-product-id="{{this.product._id}}">
+              <button class="btn btn-update update-quantity-btn" 
+                      data-cart-id="{{../cart._id}}"
+                      data-product-id="{{this.product._id}}">
+                🔄 Actualizar
+              </button>
+            </div>
+            <p class="item-subtotal">Subtotal: ${{multiply this.product.price this.quantity}}</p>
+          </div>
+          
+          <div class="item-actions">
+            <button class="btn btn-danger delete-item-btn" 
+                    data-cart-id="{{../cart._id}}"
+                    data-product-id="{{this.product._id}}">
+              🗑️ Eliminar
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+    
+    <div class="cart-summary">
+      <div class="total-section">
+        <h2>Total: ${{calculateTotal cart.products}}</h2>
+      </div>
+      
+      <div class="cart-actions">
+        <button class="btn btn-warning clear-cart-btn" data-cart-id="{{cart._id}}">
+          🧹 Vaciar Carrito
+        </button>
+        
+        <a href="/" class="btn btn-secondary">← Seguir Comprando</a>
+        
+        <button class="btn btn-success" onclick="alert('¡Funcionalidad de checkout en desarrollo!')">
+          🚀 Finalizar Compra
+        </button>
+      </div>
+    </div>
+  {{else}}
+    <div class="empty-cart">
+      <div class="empty-icon">🛒</div>
+      <h2>Tu carrito está vacío</h2>
+      <p>¡Agrega algunos productos increíbles!</p>
+      <a href="/" class="btn btn-primary">Descubrir Productos</a>
+    </div>
+  {{/if}}
+</div>
+
+<style>
+.cart-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cart-items {
+  margin-bottom: 30px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  gap: 20px;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-left: 4px solid #667eea;
+}
+
+.item-image img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.no-image {
+  width: 80px;
+  height: 80px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.item-details h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.item-description {
+  color: #666;
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+}
+
+.item-category, .item-code {
+  color: #888;
+  margin: 2px 0;
+  font-size: 0.85rem;
+}
+
+.item-pricing {
+  text-align: center;
+}
+
+.item-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #667eea;
+  margin: 0 0 10px 0;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.quantity-input {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.btn-update {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.btn-update:hover {
+  background: #138496;
+}
+
+.item-subtotal {
+  font-weight: bold;
+  color: #28a745;
+  margin: 0;
+}
+
+.item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cart-summary {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.total-section {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.total-section h2 {
+  color: #333;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.cart-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.empty-cart {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.empty-cart h2 {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.empty-cart p {
+  color: #888;
+  margin-bottom: 25px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.3s;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #764ba2;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-warning {
+  background: #ffc107;
+  color: #212529;
+}
+
+.btn-warning:hover {
+  background: #e0a800;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .cart-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .item-pricing, .item-actions {
+    justify-self: center;
+  }
+  
+  .cart-actions {
+    flex-direction: column;
+  }
+  
+  .quantity-controls {
+    justify-content: center;
+  }
+}
+</style>
+
+<script>
+
+// ACTUALIZAR CANTIDAD
+
+document.querySelectorAll('.update-quantity-btn').forEach(button => {
+  button.addEventListener('click', async function() {
+    const cartId = this.dataset.cartId;
+    const productId = this.dataset.productId;
+    const quantityInput = document.getElementById(`quantity-${productId}`);
+    const quantity = parseInt(quantityInput.value);
+
+    if (quantity <= 0) {
+      alert('❌ La cantidad debe ser mayor a 0');
+      return;
+    }
+
+    // Deshabilitar botón mientras se procesa
+    this.disabled = true;
+    const originalText = this.innerHTML;
+    this.innerHTML = '⏳ Actualizando...';
+
+    try {
+      const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantity })
+      });
+
+      if (response.ok) {
+        alert('✅ Cantidad actualizada');
+        location.reload(); // Recargar para ver cambios
+      } else {
+        const error = await response.json();
+        alert(`❌ Error: ${error.message}`);
+      }
+    } catch (error) {
+      alert(`❌ Error de conexión: ${error.message}`);
+    } finally {
+      this.disabled = false;
+      this.innerHTML = originalText;
+    }
+  });
+});
+
+
+// ELIMINAR PRODUCTO
+document.querySelectorAll('.delete-item-btn').forEach(button => {
+  button.addEventListener('click', async function() {
+    if (!confirm('¿Eliminar este producto del carrito?')) return;
+
+    const cartId = this.dataset.cartId;
+    const productId = this.dataset.productId;
+
+    // Deshabilitar botón mientras se procesa
+    this.disabled = true;
+    const originalText = this.innerHTML;
+    this.innerHTML = '⏳ Eliminando...';
+
+    try {
+      const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        alert('✅ Producto eliminado');
+        location.reload(); // Recargar para ver cambios
+      } else {
+        const error = await response.json();
+        alert(`❌ Error: ${error.message}`);
+      }
+    } catch (error) {
+      alert(`❌ Error de conexión: ${error.message}`);
+    } finally {
+      this.disabled = false;
+      this.innerHTML = originalText;
+    }
+  });
+});
+
+// VACIAR CARRITO
+document.querySelectorAll('.clear-cart-btn').forEach(button => {
+  button.addEventListener('click', async function() {
+    if (!confirm('¿Vaciar todo el carrito?')) return;
+
+    const cartId = this.dataset.cartId;
+
+    // Deshabilitar botón mientras se procesa
+    this.disabled = true;
+    const originalText = this.innerHTML;
+    this.innerHTML = '⏳ Vaciando...';
+
+    try {
+      const response = await fetch(`/api/carts/${cartId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        alert('✅ Carrito vaciado');
+        location.reload(); // Recargar para ver cambios
+      } else {
+        const error = await response.json();
+        alert(`❌ Error: ${error.message}`);
+      }
+    } catch (error) {
+      alert(`❌ Error de conexión: ${error.message}`);
+    } finally {
+      this.disabled = false;
+      this.innerHTML = originalText;
+    }
+  });
+});
+</script>

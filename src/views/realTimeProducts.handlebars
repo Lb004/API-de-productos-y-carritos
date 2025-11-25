@@ -1,0 +1,736 @@
+<div class="realtime-container">
+  <h1>⚡ Administrar productos en tiempo real</h1>
+
+  <!-- Formulario para agregar productos -->
+  <div class="form-section">
+    <h2 id="form-title">➕ Agregar Nuevo Producto</h2>
+    <form id="productForm" class="product-form">
+      <input type="hidden" id="editProductId" value="">
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="title">Título *</label>
+          <input type="text" id="title" name="title" placeholder="Ej: Laptop Gaming" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción *</label>
+          <input type="text" id="description" name="description" placeholder="Ej: Laptop de alta gama para gaming" required />
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="code">Código *</label>
+          <input type="text" id="code" name="code" placeholder="Ej: LAP001" required />
+        </div>
+        <div class="form-group">
+          <label for="price">Precio *</label>
+          <input type="number" id="price" name="price" placeholder="Ej: 999.99" min="0" step="0.01" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="stock">Stock *</label>
+          <input type="number" id="stock" name="stock" placeholder="Ej: 10" min="0" required />
+        </div>
+        <div class="form-group">
+          <label for="category">Categoría *</label>
+          <input type="text" id="category" name="category" placeholder="Ej: Tecnología" required />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <span class="btn-icon">➕</span>
+          <span id="submitText">Agregar Producto</span>
+        </button>
+        <button type="button" id="cancelEditBtn" class="btn btn-secondary" style="display: none;">
+          <span class="btn-icon">✖️</span>
+          Cancelar Edición
+        </button>
+        <button type="button" id="clearFormBtn" class="btn btn-secondary">
+          <span class="btn-icon">🗑️</span>
+          Limpiar Formulario
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista de productos en tiempo real -->
+  <div class="products-section">
+    <h2>📦 Productos Existentes</h2>
+    <div class="products-stats">
+      <span class="stat-item">Total: <strong id="productsCount">{{products.length}}</strong> productos</span>
+      <span class="stat-item">En tiempo real: <span class="live-indicator">●</span></span>
+    </div>
+
+    <div id="productsContainer" class="products-grid">
+      {{#if products.length}}
+        {{#each products}}
+          <div class="product-card realtime-card" data-id="{{this._id}}">
+            <div class="product-header">
+              <h3>{{this.title}}</h3>
+              <span class="product-price">${{this.price}}</span>
+            </div>
+            <p class="product-description">{{this.description}}</p>
+            <div class="product-details">
+              <div class="detail-item">
+                <span class="detail-label">Código:</span>
+                <span class="detail-value code-value">{{this.code}}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Categoría:</span>
+                <span class="detail-value category-value">{{this.category}}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Stock:</span>
+                <span class="detail-value stock-value {{#if this.stock}}in-stock{{else}}out-of-stock{{/if}}">
+                  {{this.stock}}
+                </span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Estado:</span>
+                <span class="detail-value {{#if this.status}}status-active{{else}}status-inactive{{/if}}">
+                  {{#if this.status}}Activo{{else}}Inactivo{{/if}}
+                </span>
+              </div>
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-warning edit-btn" data-id="{{this._id}}">
+                <span class="btn-icon">✏️</span>
+                Editar
+              </button>
+              <button class="btn btn-danger delete-btn" data-id="{{this._id}}">
+                <span class="btn-icon">🗑️</span>
+                Eliminar
+              </button>
+            </div>
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="no-products">
+          <div class="no-products-icon">📦</div>
+          <h3>No hay productos disponibles</h3>
+          <p>Agrega el primer producto usando el formulario superior</p>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+<style>
+.realtime-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.realtime-container h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+/* Sección del formulario */
+.form-section {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+  border-left: 5px solid #667eea;
+}
+
+.form-section h2 {
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  padding: 12px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s;
+  background: #f8f9fa;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Sección de productos */
+.products-section {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.products-section h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.products-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.live-indicator {
+  color: #28a745;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Grid de productos */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* Tarjetas de productos */
+.realtime-card {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.realtime-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.realtime-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border-color: #667eea;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.product-header h3 {
+  color: #333;
+  margin: 0;
+  font-size: 1.2rem;
+  flex: 1;
+}
+
+.product-price {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #667eea;
+  margin-left: 15px;
+}
+
+.product-description {
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.product-details {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.detail-value {
+  color: #333;
+  font-size: 0.85rem;
+}
+
+.in-stock {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.out-of-stock {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.status-active {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.status-inactive {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.product-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Estados de no productos */
+.no-products {
+  text-align: center;
+  padding: 60px 20px;
+  grid-column: 1 / -1;
+}
+
+.no-products-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+/* Botones */
+.btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+  transform: translateY(-2px);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #212529;
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-actions {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+
+// Elementos del formulario
+const form = document.getElementById('productForm');
+const container = document.getElementById('productsContainer');
+const clearFormBtn = document.getElementById('clearFormBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const productsCount = document.getElementById('productsCount');
+const formTitle = document.getElementById('form-title');
+const submitText = document.getElementById('submitText');
+const editProductIdInput = document.getElementById('editProductId');
+
+// ========================
+// SUBMIT FORMULARIO (Crear o Actualizar)
+// ========================
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const editId = editProductIdInput.value;
+  
+  const productData = {
+    title: form.title.value.trim(),
+    description: form.description.value.trim(),
+    code: form.code.value.trim(),
+    price: parseFloat(form.price.value),
+    stock: parseInt(form.stock.value),
+    category: form.category.value.trim(),
+    status: true,
+    thumbnails: []
+  };
+
+  // Validaciones
+  if (productData.price < 0) {
+    alert('❌ El precio no puede ser negativo');
+    return;
+  }
+
+  if (productData.stock < 0) {
+    alert('❌ El stock no puede ser negativo');
+    return;
+  }
+
+  if (editId) {
+    // MODO EDICIÓN - Usar API REST
+    try {
+      const response = await fetch(`/api/products/${editId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productData)
+      });
+
+      if (response.ok) {
+        alert('✅ Producto actualizado exitosamente');
+        location.reload();
+      } else {
+        const error = await response.json();
+        alert(`❌ Error: ${error.message}`);
+      }
+    } catch (error) {
+      alert(`❌ Error de conexión: ${error.message}`);
+    }
+  } else {
+    // MODO CREACIÓN - Usar WebSocket
+    socket.emit('createProduct', productData);
+    form.reset();
+  }
+});
+
+// ========================
+// LIMPIAR FORMULARIO
+// ========================
+clearFormBtn.addEventListener('click', () => {
+  form.reset();
+  resetFormToCreate();
+});
+
+// ========================
+// CANCELAR EDICIÓN
+// ========================
+cancelEditBtn.addEventListener('click', () => {
+  form.reset();
+  resetFormToCreate();
+});
+
+// ========================
+// EDITAR PRODUCTO
+// ========================
+container.addEventListener('click', (e) => {
+  if (e.target.classList.contains('edit-btn') || e.target.closest('.edit-btn')) {
+    const btn = e.target.classList.contains('edit-btn') ? e.target : e.target.closest('.edit-btn');
+    const id = btn.dataset.id;
+    const card = btn.closest('.product-card');
+    
+    // Obtener datos del producto desde el DOM
+    const title = card.querySelector('h3').textContent.trim();
+    const price = card.querySelector('.product-price').textContent.replace('$', '').trim();
+    const description = card.querySelector('.product-description').textContent.trim();
+    const code = card.querySelector('.code-value').textContent.trim();
+    const category = card.querySelector('.category-value').textContent.trim();
+    const stock = card.querySelector('.stock-value').textContent.trim();
+    
+    // Cargar datos en el formulario
+    form.title.value = title;
+    form.description.value = description;
+    form.code.value = code;
+    form.price.value = price;
+    form.stock.value = stock;
+    form.category.value = category;
+    editProductIdInput.value = id;
+    
+    // Cambiar UI a modo edición
+    formTitle.textContent = '✏️ Editar Producto';
+    submitText.textContent = 'Guardar Cambios';
+    cancelEditBtn.style.display = 'inline-flex';
+    
+    // Scroll al formulario
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+});
+
+// ========================
+// ELIMINAR PRODUCTO
+// ========================
+container.addEventListener('click', (e) => {
+  if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+    const btn = e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn');
+    const id = btn.dataset.id;
+    
+    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+      socket.emit('deleteProduct', id);
+    }
+  }
+});
+
+// ========================
+// RESETEAR FORMULARIO A MODO CREACIÓN
+// ========================
+function resetFormToCreate() {
+  editProductIdInput.value = '';
+  formTitle.textContent = '➕ Agregar Nuevo Producto';
+  submitText.textContent = 'Agregar Producto';
+  cancelEditBtn.style.display = 'none';
+}
+
+// ========================
+// WEBSOCKET: PRODUCTO CREADO
+// ========================
+socket.on('productCreated', (product) => {
+  const noProducts = container.querySelector('.no-products');
+  if (noProducts) {
+    noProducts.remove();
+  }
+  
+  const card = document.createElement('div');
+  card.classList.add('product-card', 'realtime-card');
+  card.setAttribute('data-id', product._id || product.id);
+  card.innerHTML = `
+    <div class="product-header">
+      <h3>${product.title}</h3>
+      <span class="product-price">$${product.price}</span>
+    </div>
+    <p class="product-description">${product.description}</p>
+    <div class="product-details">
+      <div class="detail-item">
+        <span class="detail-label">Código:</span>
+        <span class="detail-value code-value">${product.code}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Categoría:</span>
+        <span class="detail-value category-value">${product.category}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Stock:</span>
+        <span class="detail-value stock-value ${product.stock ? 'in-stock' : 'out-of-stock'}">
+          ${product.stock}
+        </span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Estado:</span>
+        <span class="detail-value ${product.status ? 'status-active' : 'status-inactive'}">
+          ${product.status ? 'Activo' : 'Inactivo'}
+        </span>
+      </div>
+    </div>
+    <div class="product-actions">
+      <button class="btn btn-warning edit-btn" data-id="${product._id || product.id}">
+        <span class="btn-icon">✏️</span>
+        Editar
+      </button>
+      <button class="btn btn-danger delete-btn" data-id="${product._id || product.id}">
+        <span class="btn-icon">🗑️</span>
+        Eliminar
+      </button>
+    </div>
+  `;
+  
+  container.appendChild(card);
+  updateProductsCount();
+  
+  // Animación
+  card.style.animation = 'slideIn 0.5s ease-out';
+});
+
+// ========================
+// WEBSOCKET: PRODUCTO ELIMINADO
+// ========================
+socket.on('productDeleted', (id) => {
+  const card = container.querySelector(`[data-id="${id}"]`);
+  if (card) {
+    card.style.animation = 'slideOut 0.4s ease-in';
+    setTimeout(() => {
+      card.remove();
+      updateProductsCount();
+      
+      if (container.children.length === 0) {
+        container.innerHTML = `
+          <div class="no-products">
+            <div class="no-products-icon">📦</div>
+            <h3>No hay productos disponibles</h3>
+            <p>Agrega el primer producto usando el formulario superior</p>
+          </div>
+        `;
+      }
+    }, 400);
+  }
+});
+
+// ========================
+// WEBSOCKET: ERROR
+// ========================
+socket.on('error', (error) => {
+  alert(`❌ Error: ${error.message}`);
+});
+
+// ========================
+// ACTUALIZAR CONTADOR
+// ========================
+function updateProductsCount() {
+  const productCards = container.querySelectorAll('.product-card');
+  productsCount.textContent = productCards.length;
+}
+
+// ========================
+// ANIMACIONES CSS
+// ========================
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+  }
+`;
+document.head.appendChild(style);
+
+// Inicializar contador
+updateProductsCount();
+</script>
