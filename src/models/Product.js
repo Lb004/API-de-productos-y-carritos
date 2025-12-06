@@ -45,7 +45,6 @@ const productSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Agregar plugin de paginación
 productSchema.plugin(mongoosePaginate);
 
 export default mongoose.model("Product", productSchema);

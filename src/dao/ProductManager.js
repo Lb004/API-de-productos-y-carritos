@@ -33,7 +33,7 @@ class ProductManager {
         .sort(sortOptions)
         .skip(skip)
         .limit(limit)
-        .lean(); // ← IMPORTANTE: objetos planos
+        .lean();
 
       // Contar total para paginación
       const totalProducts = await Product.countDocuments(filter);
@@ -81,7 +81,7 @@ class ProductManager {
         throw new Error("ID de producto inválido");
       }
 
-      const product = await Product.findById(id).lean(); // ← .lean() para objeto plano
+      const product = await Product.findById(id).lean();
       
       if (!product) {
         throw new Error("Producto no encontrado");

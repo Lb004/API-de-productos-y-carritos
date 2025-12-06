@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div class="products-container">
   <h1>{{title}}</h1>
 
@@ -250,11 +249,6 @@
   box-shadow: none;
 }
 
-/* Estilos específicos para los filtros */
-.filter-form .btn {
-  white-space: nowrap;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .filter-form {
@@ -279,45 +273,26 @@
     gap: 10px;
   }
 }
-
-@media (max-width: 480px) {
-  .products-container {
-    padding: 10px;
-  }
-  
-  .filters {
-    padding: 15px;
-  }
-  
-  .product-card {
-    padding: 15px;
-  }
-}
 </style>
 
 <script>
-// Agregar producto al carrito desde la página principal
+// Agregar producto al carrito
 document.querySelectorAll('.add-to-cart-btn').forEach(button => {
   button.addEventListener('click', async function() {
     const productId = this.dataset.productId;
     const button = this;
     
-    // Mostrar loading
     const originalText = button.innerHTML;
     button.innerHTML = '⏳ Agregando...';
     button.disabled = true;
     
     try {
-      // Primero necesitamos un carrito - crear uno nuevo si no existe
       let cartId = localStorage.getItem('currentCartId');
       
       if (!cartId) {
-        // Crear nuevo carrito
         const response = await fetch('/api/carts', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          headers: { 'Content-Type': 'application/json' }
         });
         
         const result = await response.json();
@@ -325,12 +300,9 @@ document.querySelectorAll('.add-to-cart-btn').forEach(button => {
         localStorage.setItem('currentCartId', cartId);
       }
       
-      // Agregar producto al carrito
       const addResponse = await fetch(`/api/carts/${cartId}/product/${productId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
       
       if (addResponse.ok) {
@@ -352,35 +324,4 @@ document.querySelectorAll('.add-to-cart-btn').forEach(button => {
     }
   });
 });
-
-// Mejorar la experiencia de usuario en los filtros
-document.querySelectorAll('.filter-form input, .filter-form select').forEach(element => {
-  element.addEventListener('change', function() {
-    this.closest('form').submit();
-  });
-});
 </script>
-=======
-<div class="products-grid">
-  {{#if products.length}}
-    {{#each products}}
-      <div class="product-card">
-        <h3>{{this.title}}</h3>
-        <p>{{this.description}}</p>
-        <p class="product-price">${{this.price}}</p>
-        <p class="product-code">Código: {{this.code}}</p>
-        <p class="product-stock">
-          {{#if this.stock}}
-            Stock:
-            {{this.stock}}
-          {{else}}
-            <span class="out">Sin stock</span>
-          {{/if}}
-        </p>
-      </div>
-    {{/each}}
-  {{else}}
-    <p class="no-products">No hay productos disponibles.</p>
-  {{/if}}
-</div>
->>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0

@@ -1,51 +1,16 @@
 <div class="product-detail-container">
   {{#if product}}
     <div class="product-detail-card">
-      <div class="product-header">
-        <h1>{{product.title}}</h1>
-        <span class="product-price">${{product.price}}</span>
-      </div>
+      <h1>{{product.title}}</h1>
+      <span class="product-price">${{product.price}}</span>
+      <p>{{product.description}}</p>
       
-      <div class="product-info">
-        <p class="product-description">{{product.description}}</p>
-        
-        <div class="product-meta">
-          <div class="meta-item">
-            <strong>Categoría:</strong>
-            <span>{{product.category}}</span>
-          </div>
-          <div class="meta-item">
-            <strong>Código:</strong>
-            <span>{{product.code}}</span>
-          </div>
-          <div class="meta-item">
-            <strong>Stock:</strong>
-            <span class="{{#if product.stock}}in-stock{{else}}out-of-stock{{/if}}">
-              {{#if product.stock}}
-                {{product.stock}} unidades disponibles
-              {{else}}
-                Sin stock
-              {{/if}}
-            </span>
-          </div>
-          <div class="meta-item">
-            <strong>Estado:</strong>
-            <span class="{{#if product.status}}active{{else}}inactive{{/if}}">
-              {{#if product.status}}Activo{{else}}Inactivo{{/if}}
-            </span>
-          </div>
-        </div>
-
-        {{#if product.thumbnails.length}}
-          <div class="product-gallery">
-            <h3>Imágenes</h3>
-            <div class="thumbnails">
-              {{#each product.thumbnails}}
-                <img src="{{this}}" alt="{{../product.title}}" class="thumbnail">
-              {{/each}}
-            </div>
-          </div>
-        {{/if}}
+      <div class="product-meta">
+        <p><strong>Categoría:</strong> {{product.category}}</p>
+        <p><strong>Código:</strong> {{product.code}}</p>
+        <p><strong>Stock:</strong> <span class="{{#if product.stock}}in-stock{{else}}out-of-stock{{/if}}">
+          {{#if product.stock}}{{product.stock}} unidades{{else}}Sin stock{{/if}}
+        </span></p>
       </div>
 
       <div class="product-actions">
@@ -56,212 +21,51 @@
         {{else}}
           <button class="btn btn-disabled" disabled>Sin Stock</button>
         {{/if}}
-        
-        <a href="/" class="btn btn-secondary">← Volver a Productos</a>
+        <a href="/" class="btn btn-secondary">← Volver</a>
       </div>
     </div>
   {{else}}
     <div class="error-message">
       <h2>Producto no encontrado</h2>
-      <p>El producto que buscas no existe o ha sido eliminado.</p>
       <a href="/" class="btn btn-primary">Volver a la tienda</a>
     </div>
   {{/if}}
 </div>
 
 <style>
-.product-detail-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.product-detail-card {
-  background: white;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.product-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #667eea;
-  padding-bottom: 15px;
-}
-
-.product-header h1 {
-  color: #333;
-  margin: 0;
-}
-
-.product-price {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #667eea;
-}
-
-.product-description {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #666;
-  margin-bottom: 25px;
-}
-
-.product-meta {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 25px;
-}
-
-.meta-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.meta-item:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
-.in-stock {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.out-of-stock {
-  color: #dc3545;
-  font-weight: bold;
-}
-
-.active {
-  color: #28a745;
-}
-
-.inactive {
-  color: #dc3545;
-}
-
-.product-gallery {
-  margin-bottom: 25px;
-}
-
-.thumbnails {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.thumbnail {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid #e9ecef;
-}
-
-.product-actions {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: all 0.3s;
-  display: inline-block;
-}
-
-.btn-primary {
-  background: #667eea;
-  color: white;
-}
-
-.btn-primary:hover {
-  background: #764ba2;
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: #545b62;
-}
-
-.btn-disabled {
-  background: #ccc;
-  color: #666;
-  cursor: not-allowed;
-}
-
-.error-message {
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.error-message h2 {
-  color: #dc3545;
-  margin-bottom: 15px;
-}
-
-@media (max-width: 768px) {
-  .product-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  
-  .product-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
+.product-detail-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+.product-detail-card { background: white; border-radius: 10px; padding: 30px; }
+.product-price { font-size: 2rem; font-weight: bold; color: #667eea; }
+.product-meta { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0; }
+.in-stock { color: #28a745; font-weight: bold; }
+.out-of-stock { color: #dc3545; font-weight: bold; }
+.product-actions { display: flex; gap: 15px; margin-top: 25px; }
+.btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; }
+.btn-primary { background: #667eea; color: white; }
+.btn-secondary { background: #6c757d; color: white; }
+.btn-disabled { background: #ccc; color: #666; cursor: not-allowed; }
 </style>
 
 <script>
-// Agregar producto al carrito
 document.querySelector('.add-to-cart-btn')?.addEventListener('click', async function() {
   const productId = this.dataset.productId;
   
   try {
-    // Primero necesitamos un carrito - crear uno nuevo si no existe
     let cartId = localStorage.getItem('currentCartId');
     
     if (!cartId) {
-      // Crear nuevo carrito
       const response = await fetch('/api/carts', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
-      
       const result = await response.json();
       cartId = result.payload._id;
       localStorage.setItem('currentCartId', cartId);
     }
     
-    // Agregar producto al carrito
     const addResponse = await fetch(`/api/carts/${cartId}/product/${productId}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     });
     
     if (addResponse.ok) {
@@ -271,7 +75,7 @@ document.querySelector('.add-to-cart-btn')?.addEventListener('click', async func
       alert('❌ Error: ' + error.message);
     }
   } catch (error) {
-    alert('❌ Error de conexión: ' + error.message);
+    alert('❌ Error: ' + error.message);
   }
 });
 </script>

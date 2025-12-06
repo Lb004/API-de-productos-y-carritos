@@ -24,11 +24,20 @@ class CartManager {
 
       const cart = await Cart.findById(id)
         .populate('products.product')
-        .lean(); // ← .lean() para objeto plano
+        .lean();
       
       if (!cart) {
         throw new Error("Carrito no encontrado");
       }
+      
+      // Validar que todos los productos existan
+      cart.products = cart.products.filter(item => {
+        if (!item.product) {
+          console.warn(`⚠️ Producto eliminado o inválido en carrito ${id}`);
+          return false;
+        }
+        return true;
+      });
       
       return cart;
     } catch (error) {
@@ -158,6 +167,46 @@ class CartManager {
       return await this.getCartById(cartId);
     } catch (error) {
       throw new Error(`Error al vaciar carrito: ${error.message}`);
+    }
+  }
+
+  // 🔄 ACTUALIZAR TODO EL CARRITO CON NUEVO ARRAY DE PRODUCTOS
+  async updateCart(cartId, products) {
+    try {
+      if (!mongoose.isValidObjectId(cartId)) {
+        throw new Error("ID de carrito inválido");
+      }
+
+      // Verificar que el carrito existe
+      const cart = await Cart.findById(cartId);
+      if (!cart) {
+        throw new Error("Carrito no encontrado");
+      }
+
+      // Validar que todos los productos existan en la BD
+      for (const item of products) {
+        if (!mongoose.isValidObjectId(item.product)) {
+          throw new Error(`ID de producto inválido: ${item.product}`);
+        }
+
+        const productExists = await Product.findById(item.product);
+        if (!productExists) {
+          throw new Error(`Producto no encontrado: ${item.product}`);
+        }
+
+        if (item.quantity <= 0) {
+          throw new Error("La cantidad debe ser mayor a 0");
+        }
+      }
+
+      // Reemplazar completamente el array de productos
+      cart.products = products;
+      await cart.save();
+      
+      // Retornar el carrito actualizado con populate
+      return await this.getCartById(cartId);
+    } catch (error) {
+      throw new Error(`Error al actualizar carrito: ${error.message}`);
     }
   }
 }

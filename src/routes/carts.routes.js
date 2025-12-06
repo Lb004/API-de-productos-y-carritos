@@ -1,5 +1,4 @@
 import { Router } from "express";
-<<<<<<< HEAD
 import CartManager from "../dao/CartManager.js";
 
 const router = Router();
@@ -9,25 +8,7 @@ const cartManager = new CartManager();
 router.post("/", async (req, res) => {
   try {
     const newCart = await cartManager.createCart();
-=======
-import CartManager from "../managers/CartManager.js";
-import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const router = Router();
-const cartManager = new CartManager(
-  path.join(__dirname, "../../data/carts.json")
-);
-
-// POST / - Crear nuevo carrito
-router.post("/", (req, res) => {
-  try {
-    const newCart = cartManager.createCart();
-
->>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
     res.status(201).json({
       status: "success",
       message: "Carrito creado exitosamente",
@@ -41,19 +22,11 @@ router.post("/", (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 // GET /:cid - Obtener carrito con populate
 router.get("/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
     const cart = await cartManager.getCartById(cid);
-=======
-// GET /:cid - Obtener productos del carrito
-router.get("/:cid", (req, res) => {
-  try {
-    const { cid } = req.params;
-    const cart = cartManager.getCartById(cid);
->>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 
     if (!cart) {
       return res.status(404).json({
@@ -75,17 +48,10 @@ router.get("/:cid", (req, res) => {
 });
 
 // POST /:cid/product/:pid - Agregar producto al carrito
-<<<<<<< HEAD
 router.post("/:cid/product/:pid", async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const updatedCart = await cartManager.addProductToCart(cid, pid);
-=======
-router.post("/:cid/product/:pid", (req, res) => {
-  try {
-    const { cid, pid } = req.params;
-    const updatedCart = cartManager.addProductToCart(cid, pid);
->>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0
 
     res.json({
       status: "success",
@@ -100,7 +66,6 @@ router.post("/:cid/product/:pid", (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 // DELETE /:cid/products/:pid - Eliminar producto del carrito
 router.delete("/:cid/products/:pid", async (req, res) => {
   try {
@@ -220,6 +185,3 @@ router.delete("/:cid", async (req, res) => {
 });
 
 export default router;
-=======
-export default router;
->>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div class="realtime-container">
   <h1>⚡ Administrar productos en tiempo real</h1>
 
@@ -735,34 +734,3 @@ document.head.appendChild(style);
 // Inicializar contador
 updateProductsCount();
 </script>
-=======
-<h2>Administrar productos en tiempo real</h2>
-
-<form id="productForm" class="product-form">
-  <input type="text" id="title" placeholder="Título" required />
-  <input type="text" id="description" placeholder="Descripción" required />
-  <input type="text" id="code" placeholder="Código" required />
-  <input type="number" id="price" placeholder="Precio" required />
-  <input type="number" id="stock" placeholder="Stock" required />
-  <input type="text" id="category" placeholder="Categoría" required />
-  <button type="submit" class="btn btn-primary">Agregar producto</button>
-</form>
-
-<div id="productsContainer" class="products-grid">
-  {{#each products}}
-    <div class="product-card" data-id="{{this.id}}">
-      <h3>{{this.title}}</h3>
-      <p>{{this.description}}</p>
-      <p class="product-price">${{this.price}}</p>
-      <p class="product-code">Código: {{this.code}}</p>
-      <button
-        class="btn btn-danger delete-btn"
-        data-id="{{this.id}}"
-      >Eliminar</button>
-    </div>
-  {{/each}}
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/realTimeProducts.js"></script>
->>>>>>> 3eacb13561b5071d6898f1e6b7f48fd6979764d0

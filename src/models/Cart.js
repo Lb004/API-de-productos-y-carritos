@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 
-// Esquema para los items del carrito
 const cartItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",  // Referencia al modelo Product
+    ref: "Product",
     required: true
   },
   quantity: {
@@ -15,13 +14,10 @@ const cartItemSchema = new mongoose.Schema({
   }
 });
 
-// Esquema principal del carrito
 const cartSchema = new mongoose.Schema({
   products: [cartItemSchema]
 }, {
   timestamps: true
 });
 
-const Cart = mongoose.model("Cart", cartSchema);
-
-export default Cart;
+export default mongoose.model("Cart", cartSchema);
